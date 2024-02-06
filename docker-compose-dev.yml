@@ -1,0 +1,49 @@
+version: '3.9'
+services:
+  diffusion1:
+    volumes:
+      - .:/workspace
+    build: .
+    image: diffusion:latest
+    container_name: diffusion1
+    ports:
+      - "3001:3000"
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]
+    # command: /bin/bash -c  "git config --global --add safe.directory /workspace && git config --global --add safe.directory /workspace/repositories/stable-diffusion-stability-ai && bash webui.sh -f"
+    # command: /bin/bash -c  "bash webui.sh -f"
+    command: /bin/bash -c  "tail -f /dev/null"
+
+  diffusion2:
+    volumes:
+      - .:/workspace
+    build: .
+    image: diffusion:latest
+    container_name: diffusion2
+    ports:
+      - "3002:3000"
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['1']
+              capabilities: [gpu]
+    command: /bin/bash -c  "bash webui.sh -f"
+    # command: /bin/bash -c  "tail -f /dev/null"
+
+
+    # command: /bin/bash -c "bash webui.sh -f --listen --port 3000 --enable-insecure-extension-access --embeddings-dir '/workspace/embeddings'"
+
+
+
+
+
+# tensorboard --logdir ./tf_logs/juun/ --bind_all

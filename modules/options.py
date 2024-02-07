@@ -8,6 +8,36 @@ from modules import errors
 from modules.shared_cmd_options import cmd_opts
 
 
+
+"""
+옵션 섹션 종류
+1) saving-images
+2) saving-paths
+3) saving-to-dirs
+4) upscaling
+5) face-restoration
+6) system
+7) API
+8) training
+9) sd
+10) sdxl
+11) vae
+12) img2img
+13) optimizations
+14) compatibility
+15) interrogate
+16) extra_networks
+17) ui_prompt_editing
+18) ui_gallery
+19) ui_alternatives
+20) ui
+21) infotext
+22) sampler-params
+23) postprocessing
+24) Hidden options
+
+"""
+# 옵션에 대한 상세 설명 및 디폴트
 class OptionInfo:
     def __init__(self, default=None, label="", component=None, component_args=None, onchange=None, section=None, refresh=None, comment_before='', comment_after='', infotext=None, restrict_api=False, category_id=None):
         self.default = default

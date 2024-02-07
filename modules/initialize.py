@@ -11,7 +11,6 @@ from modules.timer import startup_timer
 def imports():
     logging.getLogger("torch.distributed.nn").setLevel(logging.ERROR)  # sshh...
     logging.getLogger("xformers").addFilter(lambda record: 'A matching Triton is not available' not in record.getMessage())
-    
 
     import torch  # noqa: F401
     startup_timer.record("import torch")
@@ -23,7 +22,7 @@ def imports():
     import gradio  # noqa: F401
     startup_timer.record("import gradio")
     
-    # 개노어이없음
+    # ldm 
     from modules import paths, timer, import_hook, errors  # noqa: F401
     startup_timer.record("setup paths")
 
@@ -61,7 +60,7 @@ def initialize():
     initialize_util.validate_tls_options()
     # 컨트롤 c 했을때 즉시 종료
     initialize_util.configure_sigint_handler()
-    # 모델별 스레드 lock ?
+    # 모델 세팅?
     initialize_util.configure_opts_onchange()
 
     from modules import modelloader
@@ -138,7 +137,6 @@ def initialize_rest(*, reload_script_modules=False):
 
     if reload_script_modules:
         for module in [module for name, module in sys.modules.items() if name.startswith("modules.ui")]:
-            print("module", module)
             importlib.reload(module)
         startup_timer.record("reload script modules")
 

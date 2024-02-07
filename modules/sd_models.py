@@ -90,12 +90,14 @@ class CheckpointInfo:
 
         self.ids = [self.hash, self.model_name, self.title, name, self.name_for_extra, f'{name} [{self.hash}]']
         if self.shorthash:
-            self.ids += [self.shorthash, self.sha256, f'{self.name} [{self.shorthash}]', f'{self.name_for_extra} [{self.shorthash}]']
+            self.ids += [self.shorthash, self.sha256, f'{self.name} [{self.shorthash}]', f'{self.name_for_extra} [{self.shorthash}]']   
+            
 
     def register(self):
         checkpoints_list[self.title] = self
         for id in self.ids:
             checkpoint_aliases[id] = self
+
 
     def calculate_shorthash(self):
         self.sha256 = hashes.sha256(self.filename, f"checkpoint/{self.name}")
@@ -144,24 +146,27 @@ def checkpoint_tiles(use_short=False):
 
 
 def list_models():
-    # 비어있음 {}
+    # checkpoints_list: {}
     checkpoints_list.clear()
     checkpoint_aliases.clear()
 
     # /workspace/model.ckpt
     cmd_ckpt = shared.cmd_opts.ckpt
     
-    print("프린트 no_download_sd_model", shared.cmd_opts.no_download_sd_model)
-    print("프린트 shared.sd_model_file", shared.sd_model_file)
-    print("프린트 os.path.exists(cmd_ckpt)", shared. os.path.exists(cmd_ckpt))
-    
+    # no_download_sd_model: False
+    # shared.sd_model_file: /workspace/model.ckpt
+    # cmd_ckpt != shared.sd_model_file: False
+    # os.path.exists(cmd_ckpt): False
     if shared.cmd_opts.no_download_sd_model or cmd_ckpt != shared.sd_model_file or os.path.exists(cmd_ckpt):
         model_url = None
     else:
         model_url = "https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors"
 
+    # model list: model_list: ['/workspace/models/Stable-diffusion/v1-5-pruned-emaonly.safetensors']
     model_list = modelloader.load_models(model_path=model_path, model_url=model_url, command_path=shared.cmd_opts.ckpt_dir, ext_filter=[".ckpt", ".safetensors"], download_name="v1-5-pruned-emaonly.safetensors", ext_blacklist=[".vae.ckpt", ".vae.safetensors"])
-
+    
+    # shared.default_sd_model_file : /workspace/model.ckpt
+    # cmd_ckpt != shared.default_sd_model_file : False
     if os.path.exists(cmd_ckpt):
         checkpoint_info = CheckpointInfo(cmd_ckpt)
         checkpoint_info.register()
@@ -169,11 +174,15 @@ def list_models():
         shared.opts.data['sd_model_checkpoint'] = checkpoint_info.title
     elif cmd_ckpt is not None and cmd_ckpt != shared.default_sd_model_file:
         print(f"Checkpoint in --ckpt argument not found (Possible it was moved to {model_path}: {cmd_ckpt}", file=sys.stderr)
-
+        
     for filename in model_list:
+        # filename : /workspace/models/Stable-diffusion/disneyPixarCartoon_v10.safetensors
         checkpoint_info = CheckpointInfo(filename)
         checkpoint_info.register()
-        
+    
+    # 프린트
+    # import modules.shared
+    # print("디퓨전모델: ", modules.shared.sd_model)
 
 
 re_strip_checksum = re.compile(r"\s*\[[^]]+]\s*$")
@@ -217,7 +226,7 @@ def model_hash(filename):
 def select_checkpoint():
     """Raises `FileNotFoundError` if no checkpoints are found."""
     model_checkpoint = shared.opts.sd_model_checkpoint
-
+    print("프린트 model_checkpoint", model_checkpoint)
     checkpoint_info = checkpoint_aliases.get(model_checkpoint, None)
     if checkpoint_info is not None:
         return checkpoint_info
@@ -609,7 +618,9 @@ def send_model_to_trash(m):
 
 def load_model(checkpoint_info=None, already_loaded_state_dict=None):
     from modules import sd_hijack
+    # checkpoint_info :  <modules.sd_models.CheckpointInfo object at 0x7f486b4cb670>
     checkpoint_info = checkpoint_info or select_checkpoint()
+    print("프린트 checkpoint_info", checkpoint_info)
 
     timer = Timer()
 

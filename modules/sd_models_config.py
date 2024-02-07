@@ -107,7 +107,6 @@ def guess_model_config_from_state_dict(sd, filename):
 def find_checkpoint_config(state_dict, info):
     if info is None:
         return guess_model_config_from_state_dict(state_dict, "")
-
     config = find_checkpoint_config_near_filename(info)
     if config is not None:
         return config
@@ -118,6 +117,8 @@ def find_checkpoint_config(state_dict, info):
 def find_checkpoint_config_near_filename(info):
     if info is None:
         return None
+    # /workspace/models/Stable-diffusion/disneyPixarCartoon_v10
+    # /workspace/models/Stable-diffusion/disneyPixarCartoon_v10.safetensors
 
     config = f"{os.path.splitext(info.filename)[0]}.yaml"
     if os.path.exists(config):

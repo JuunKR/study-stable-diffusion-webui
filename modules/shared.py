@@ -10,15 +10,21 @@ cmd_opts = shared_cmd_options.cmd_opts
 parser = shared_cmd_options.parser
 
 batch_cond_uncond = True  # old field, unused now in favor of shared.opts.batch_cond_uncond
+
 parallel_processing_allowed = True
+
 styles_filename = cmd_opts.styles_file
+
 config_filename = cmd_opts.ui_settings_file
+
 hide_dirs = {"visible": not cmd_opts.hide_ui_dir_config}
 
 demo = None
 
+# devices.device cuda
 device = None
 
+# devices.device cpu
 weight_load_location = None
 
 xformers_available = False
@@ -27,16 +33,24 @@ hypernetworks = {}
 
 loaded_hypernetworks = []
 
+# <modules.shared_state.State object at 0x7f2745fd3b80>
 state = None
 
+# <modules.styles.StyleDatabase object at 0x7f273f162cb0>
 prompt_styles = None
 
+# <modules.interrogate.InterrogateModels object at 0x7f273f163550>
 interrogator = None
 
 face_restorers = []
 
+# shared_options.options_templates
 options_templates = None
+
+# <modules.options.Options object at 0x7f28b56c48b0>
 opts = None
+
+# shared.restricted_opts {'outdir_txt2img_grids', 'outdir_init_images', 'directories_filename_pattern', 'outdir_save', 'outdir_img2img_samples', 'outdir_grids', 'outdir_extras_samples', 'outdir_samples', 'outdir_txt2img_samples', 'samples_filename_pattern'}
 restricted_opts = None
 
 sd_model: sd_models_types.WebuiSdModel = None
@@ -64,8 +78,10 @@ progress_print_out = sys.stdout
 
 gradio_theme = gr.themes.Base()
 
+# <modules.shared_total_tqdm.TotalTQDM object at 0x7f273f163550>
 total_tqdm = None
 
+# shared.mem_mon  <MemUsageMonitor(MemMon, initial daemon)>
 mem_mon = None
 
 options_section = options.options_section

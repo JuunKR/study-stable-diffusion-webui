@@ -132,6 +132,11 @@ class Shared(sys.modules[__name__].__class__):
         from modules import shared
         modules.sd_models.model_data.set_sd_model(value)
 
-from modules import shared
+# from modules import shared
+print("test", 
+sys.modules['modules.shared'].__class__)
+
 sys.modules['modules.shared'].__class__ = Shared
+
+
 

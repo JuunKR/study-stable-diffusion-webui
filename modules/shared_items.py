@@ -97,7 +97,6 @@ ui_reorder_categories_builtin_items = [
     "override_settings",
 ]
 
-
 def ui_reorder_categories():
     from modules import scripts
 
@@ -121,6 +120,7 @@ class Shared(sys.modules[__name__].__class__):
 
     sd_model_val = None
 
+    # sd_models의 list_models 함수를 통해 세팅하는것으로 추정
     @property
     def sd_model(self):
         import modules.sd_models
@@ -132,10 +132,7 @@ class Shared(sys.modules[__name__].__class__):
         from modules import shared
         modules.sd_models.model_data.set_sd_model(value)
 
-# from modules import shared
-print("test", 
-sys.modules['modules.shared'].__class__)
-
+# 객체 추가 
 sys.modules['modules.shared'].__class__ = Shared
 
 

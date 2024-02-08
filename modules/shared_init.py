@@ -44,7 +44,7 @@ def initialize():
     shared.weight_load_location = None if cmd_opts.lowram else "cpu"
     
     from modules import shared_state
-        
+    
     ### Style database not found: /workspace/styles.csv
     ### Style database not found: /workspace/styles.csv
     

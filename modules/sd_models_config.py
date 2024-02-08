@@ -106,6 +106,7 @@ def guess_model_config_from_state_dict(sd, filename):
 
 def find_checkpoint_config(state_dict, info):
     if info is None:
+        # 디폴트 config 반환
         return guess_model_config_from_state_dict(state_dict, "")
     config = find_checkpoint_config_near_filename(info)
     if config is not None:

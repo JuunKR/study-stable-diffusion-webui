@@ -341,6 +341,7 @@ def get_checkpoint_state_dict(checkpoint_info: CheckpointInfo, timer):
         # use checkpoint cache
         print(f"Loading weights [{sd_model_hash}] from cache")
         # move to end as latest
+        # 캐시 이용
         checkpoints_loaded.move_to_end(checkpoint_info)
         return checkpoints_loaded[checkpoint_info]
 
@@ -509,6 +510,7 @@ def repair_config(sd_config):
         sd_config.model.params.use_ema = False
 
     if hasattr(sd_config.model.params, 'unet_config'):
+        # precision
         if shared.cmd_opts.no_half:
             sd_config.model.params.unet_config.params.use_fp16 = False
         elif shared.cmd_opts.upcast_sampling:
@@ -534,19 +536,23 @@ class SdModelData:
         self.sd_model = None
         self.loaded_sd_models = []
         self.was_loaded_at_least_once = False
+        # 작업이 끝나기 전까지 다른 쓰레드가 공유변수 접근 금지 시킴
         self.lock = threading.Lock()
 
     def get_sd_model(self):
         
+        # 로딩 기록 체크
         if self.was_loaded_at_least_once:
             return self.sd_model
 
+        # sd 모델 없는겨우
         if self.sd_model is None:
             with self.lock:
                 if self.sd_model is not None or self.was_loaded_at_least_once:
                     return self.sd_model
 
                 try:
+                    # 모델이 없는경거나 한번도 실행해본적 없는 경우
                     load_model()
 
                 except Exception as e:
@@ -620,10 +626,10 @@ def load_model(checkpoint_info=None, already_loaded_state_dict=None):
     from modules import sd_hijack
     # checkpoint_info :  <modules.sd_models.CheckpointInfo object at 0x7f486b4cb670>
     checkpoint_info = checkpoint_info or select_checkpoint()
-    print("프린트 checkpoint_info", checkpoint_info)
 
     timer = Timer()
 
+    # 기존 모델 제거
     if model_data.sd_model:
         send_model_to_trash(model_data.sd_model)
         model_data.sd_model = None
@@ -631,12 +637,17 @@ def load_model(checkpoint_info=None, already_loaded_state_dict=None):
 
     timer.record("unload existing model")
 
+    # state_dict을 파라미터로 받은경우
     if already_loaded_state_dict is not None:
         state_dict = already_loaded_state_dict
+    # checkpoint에서 state_dict 가져옴
     else:
         state_dict = get_checkpoint_state_dict(checkpoint_info, timer)
 
+    # 모델의 config 있는지 체크 없으면 디폴트
     checkpoint_config = sd_models_config.find_checkpoint_config(state_dict, checkpoint_info)
+    
+    # clip 네트워크 사용 여부 체크
     clip_is_included_into_sd = any(x for x in [sd1_clip_weight, sd2_clip_weight, sdxl_clip_weight, sdxl_refiner_clip_weight] if x in state_dict)
 
     timer.record("find config")
@@ -650,7 +661,9 @@ def load_model(checkpoint_info=None, already_loaded_state_dict=None):
 
     sd_model = None
     try:
+        # 초기화, 가중치 등에 대한 세팅
         with sd_disable_initialization.DisableInitialization(disable_clip=clip_is_included_into_sd or shared.cmd_opts.do_not_download_clip):
+            # meta 장치에 할당여부
             with sd_disable_initialization.InitializeOnMeta():
                 sd_model = instantiate_from_config(sd_config.model)
 
@@ -659,8 +672,8 @@ def load_model(checkpoint_info=None, already_loaded_state_dict=None):
 
     if sd_model is None:
         print('Failed to create model quickly; will retry using slow method.', file=sys.stderr)
-
         with sd_disable_initialization.InitializeOnMeta():
+            # 모델 로드
             sd_model = instantiate_from_config(sd_config.model)
 
     sd_model.used_config = checkpoint_config

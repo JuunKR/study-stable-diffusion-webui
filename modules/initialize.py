@@ -139,7 +139,6 @@ def initialize_rest(*, reload_script_modules=False):
         scripts.load_scripts()
 
     if reload_script_modules:
-        print("여기들어오니?")
         for module in [module for name, module in sys.modules.items() if name.startswith("modules.ui")]:
             importlib.reload(module)
         startup_timer.record("reload script modules")

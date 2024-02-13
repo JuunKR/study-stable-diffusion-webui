@@ -59,8 +59,6 @@ def webui():
     from modules import shared, ui_tempdir, script_callbacks, ui, progress, ui_extra_networks
 
     while 1:
-        # Juun
-        # print('이거 반복해?')
         if shared.opts.clean_temp_dir_at_start:
             ui_tempdir.cleanup_tmpdr()
             startup_timer.record("cleanup temp dir")

@@ -337,9 +337,9 @@ class Api:
         return script_args
 
     def text2imgapi(self, txt2imgreq: models.StableDiffusionTxt2ImgProcessingAPI):
-        # JUun
         script_runner = scripts.scripts_txt2img
         if not script_runner.scripts:
+            print("hello")
             script_runner.initialize_scripts(False)
             ui.create_ui()
         if not self.default_script_arg_txt2img:

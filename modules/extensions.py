@@ -198,6 +198,7 @@ def list_extensions():
     loaded_extensions = {}
 
     # scan through extensions directory and load metadata
+    # /workspace/extensions-builtin, /workspace/extensions
     for dirname in [extensions_builtin_dir, extensions_dir]:
         if not os.path.isdir(dirname):
             continue
@@ -234,3 +235,27 @@ def list_extensions():
 
 
 extensions: list[Extension] = []
+# [<modules.extensions.Extension object at 0x7f255fe6c250>, <modules.extensions.Extension object at 0x7f255fe6d600>, <modules.extensions.Extension object at 0x7f255fe6d780>, <modules.extensions.Extension object at 0x7f255fe6d900>, <modules.extensions.Extension object at 0x7f255fe6da80>, <modules.extensions.Extension object at 0x7f255fe6dc00>, <modules.extensions.Extension object at 0x7f255fe43160>, <modules.extensions.Extension object at 0x7f255fe6de70>, <modules.extensions.Extension object at 0x7f255fe6dff0>, <modules.extensions.Extension object at 0x7f255fe6e170>, <modules.extensions.Extension object at 0x7f255fe6e2f0>, <modules.extensions.Extension object at 0x7f255fe6e470>, <modules.extensions.Extension object at 0x7f255fe6e5f0>, <modules.extensions.Extension object at 0x7f255fe6e770>, <modules.extensions.Extension object at 0x7f255fe6e8f0>, <modules.extensions.Extension object at 0x7f255fe6ea70>, <modules.extensions.Extension object at 0x7f255fe6ebf0>, <modules.extensions.Extension object at 0x7f255fe6ed70>, <modules.extensions.Extension object at 0x7f255fe6eef0>, <modules.extensions.Extension object at 0x7f255fe6f070>, <modules.extensions.Extension object at 0x7f255fe6f1f0>, <modules.extensions.Extension object at 0x7f255fe6f370>]
+"""
+LDSR
+Lora
+ScuNET
+SwinIR
+canvas-zoom-and-pan
+extra-options-section
+hypertile
+mobile
+prompt-bracket-checker
+adetailer
+openpose-editor
+sd-dynamic-prompts
+sd-webui-3d-open-pose-editor
+sd-webui-agent-scheduler
+sd-webui-ar
+sd-webui-controlnet
+sd-webui-lora-block-weight
+sd-webui-openpose-editor
+sd-webui-regional-prompter
+sd-webui-segment-anything
+stable-diffusion-webui-images-browser
+"""

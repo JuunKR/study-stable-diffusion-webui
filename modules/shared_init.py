@@ -24,6 +24,8 @@ def initialize():
     # shared.restricted_opts {'outdir_txt2img_grids', 'outdir_init_images', 'directories_filename_pattern', 'outdir_save', 'outdir_img2img_samples', 'outdir_grids', 'outdir_extras_samples', 'outdir_samples', 'outdir_txt2img_samples', 'samples_filename_pattern'}
     shared.restricted_opts = shared_options.restricted_opts
 
+    # 여기서 컨피그 로드 모델이름도 로드
+    # /workspace/config.json
     if os.path.exists(shared.config_filename):
         shared.opts.load(shared.config_filename)
 

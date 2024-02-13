@@ -46,6 +46,7 @@ def replace_key(d, key, new_key, value):
 
 
 class CheckpointInfo:
+    # 체크포인트와 관련된 정보를 저장하는 클래스
     def __init__(self, filename):
         self.filename = filename
         abspath = os.path.abspath(filename)
@@ -92,7 +93,7 @@ class CheckpointInfo:
         if self.shorthash:
             self.ids += [self.shorthash, self.sha256, f'{self.name} [{self.shorthash}]', f'{self.name_for_extra} [{self.shorthash}]']   
             
-
+    # checkpoints_list에 모델 저장 dictionary
     def register(self):
         checkpoints_list[self.title] = self
         for id in self.ids:
@@ -180,9 +181,6 @@ def list_models():
         checkpoint_info = CheckpointInfo(filename)
         checkpoint_info.register()
     
-    # 프린트
-    # import modules.shared
-    # print("디퓨전모델: ", modules.shared.sd_model)
 
 
 re_strip_checksum = re.compile(r"\s*\[[^]]+]\s*$")
@@ -225,8 +223,8 @@ def model_hash(filename):
 
 def select_checkpoint():
     """Raises `FileNotFoundError` if no checkpoints are found."""
+    # model_checkpoint: toonAme_version20.safetensors [cacf2ede14
     model_checkpoint = shared.opts.sd_model_checkpoint
-    print("프린트 model_checkpoint", model_checkpoint)
     checkpoint_info = checkpoint_aliases.get(model_checkpoint, None)
     if checkpoint_info is not None:
         return checkpoint_info
@@ -545,7 +543,7 @@ class SdModelData:
         if self.was_loaded_at_least_once:
             return self.sd_model
 
-        # sd 모델 없는겨우
+        # sd 모델 없는경우
         if self.sd_model is None:
             with self.lock:
                 if self.sd_model is not None or self.was_loaded_at_least_once:
@@ -624,12 +622,15 @@ def send_model_to_trash(m):
 
 def load_model(checkpoint_info=None, already_loaded_state_dict=None):
     from modules import sd_hijack
-    # checkpoint_info :  <modules.sd_models.CheckpointInfo object at 0x7f486b4cb670>
+    # None
+    # checkpoint_aliases
     checkpoint_info = checkpoint_info or select_checkpoint()
+    # checkpoint_info :  <modules.sd_models.CheckpointInfo object at 0x7f486b4cb670> 
 
     timer = Timer()
 
     # 기존 모델 제거
+    # SdModelData 객체
     if model_data.sd_model:
         send_model_to_trash(model_data.sd_model)
         model_data.sd_model = None
@@ -652,6 +653,7 @@ def load_model(checkpoint_info=None, already_loaded_state_dict=None):
 
     timer.record("find config")
 
+    # 컨피그 로드
     sd_config = OmegaConf.load(checkpoint_config)
     repair_config(sd_config)
 
@@ -665,6 +667,9 @@ def load_model(checkpoint_info=None, already_loaded_state_dict=None):
         with sd_disable_initialization.DisableInitialization(disable_clip=clip_is_included_into_sd or shared.cmd_opts.do_not_download_clip):
             # meta 장치에 할당여부
             with sd_disable_initialization.InitializeOnMeta():
+                ''' sd_config.model
+                {'base_learning_rate': 0.0001, 'target': 'ldm.models.diffusion.ddpm.LatentDiffusion', 'params': {'linear_start': 0.00085, 'linear_end': 0.012, 'num_timesteps_cond': 1, 'log_every_t': 200, 'timesteps': 1000, 'first_stage_key': 'jpg', 'cond_stage_key': 'txt', 'image_size': 64, 'channels': 4, 'cond_stage_trainable': False, 'conditioning_key': 'crossattn', 'monitor': 'val/loss_simple_ema', 'scale_factor': 0.18215, 'use_ema': False, 'scheduler_config': {'target': 'ldm.lr_scheduler.LambdaLinearScheduler', 'params': {'warm_up_steps': [10000], 'cycle_lengths': [10000000000000], 'f_start': [1e-06], 'f_max': [1.0], 'f_min': [1.0]}}, 'unet_config': {'target': 'ldm.modules.diffusionmodules.openaimodel.UNetModel', 'params': {'image_size': 32, 'in_channels': 4, 'out_channels': 4, 'model_channels': 320, 'attention_resolutions': [4, 2, 1], 'num_res_blocks': 2, 'channel_mult': [1, 2, 4, 4], 'num_heads': 8, 'use_spatial_transformer': True, 'transformer_depth': 1, 'context_dim': 768, 'use_checkpoint': True, 'legacy': False}}, 'first_stage_config': {'target': 'ldm.models.autoencoder.AutoencoderKL', 'params': {'embed_dim': 4, 'monitor': 'val/rec_loss', 'ddconfig': {'double_z': True, 'z_channels': 4, 'resolution': 256, 'in_channels': 3, 'out_ch': 3, 'ch': 128, 'ch_mult': [1, 2, 4, 4], 'num_res_blocks': 2, 'attn_resolutions': [], 'dropout': 0.0}, 'lossconfig': {'target': 'torch.nn.Identity'}}}, 'cond_stage_config': {'target': 'ldm.modules.encoders.modules.FrozenCLIPEmbedder'}}}
+                '''
                 sd_model = instantiate_from_config(sd_config.model)
 
     except Exception as e:
@@ -675,7 +680,7 @@ def load_model(checkpoint_info=None, already_loaded_state_dict=None):
         with sd_disable_initialization.InitializeOnMeta():
             # 모델 로드
             sd_model = instantiate_from_config(sd_config.model)
-
+            
     sd_model.used_config = checkpoint_config
 
     timer.record("create model")
@@ -689,6 +694,7 @@ def load_model(checkpoint_info=None, already_loaded_state_dict=None):
         }
 
     with sd_disable_initialization.LoadStateDictOnMeta(state_dict, device=model_target_device(sd_model), weight_dtype_conversion=weight_dtype_conversion):
+        # 가중치 로드
         load_model_weights(sd_model, checkpoint_info, state_dict, timer)
     timer.record("load weights from state dict")
 

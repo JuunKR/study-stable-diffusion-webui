@@ -349,7 +349,14 @@ def list_scripts(scriptdirname, extension, *, include_extensions=True):
 
     loaded_extensions = {ext.canonical_name: ext for ext in extensions.active()}
     loaded_extensions_scripts = {ext.canonical_name: [] for ext in extensions.active()}
-
+    """
+    loaded_extensions 
+    {'ldsr': <modules.extensions.Extension object at 0x7f17cd3701c0>, 'lora': <modules.extensions.Extension object at 0x7f17cd371570>, 'scunet': <modules.extensions.Extension object at 0x7f17cd3716f0>, 'swinir': <modules.extensions.Extension object at 0x7f17cd371870>, 'canvas-zoom-and-pan': <modules.extensions.Extension object at 0x7f17cd3719f0>, 'extra-options-section': <modules.extensions.Extension object at 0x7f17cd371b70>, 'hypertile': <modules.extensions.Extension object at 0x7f17cd3430d0>, 'mobile': <modules.extensions.Extension object at 0x7f17cd371de0>, 'prompt-bracket-checker': <modules.extensions.Extension object at 0x7f17cd371f60>, 'adetailer': <modules.extensions.Extension object at 0x7f17cd3720e0>, 'openpose-editor': <modules.extensions.Extension object at 0x7f17cd372260>, 'sd-dynamic-prompts': <modules.extensions.Extension object at 0x7f17cd3723e0>, 'sd-webui-3d-open-pose-editor': <modules.extensions.Extension object at 0x7f17cd372560>, 'sd-webui-agent-scheduler': <modules.extensions.Extension object at 0x7f17cd3726e0>, 'sd-webui-ar': <modules.extensions.Extension object at 0x7f17cd372860>, 'sd-webui-controlnet': <modules.extensions.Extension object at 0x7f17cd3729e0>, 'sd-webui-lora-block-weight': <modules.extensions.Extension object at 0x7f17cd372b60>, 'sd-webui-openpose-editor': <modules.extensions.Extension object at 0x7f17cd372ce0>, 'sd-webui-regional-prompter': <modules.extensions.Extension object at 0x7f17cd372e60>, 'sd-webui-segment-anything': <modules.extensions.Extension object at 0x7f17cd372fe0>, 'stable-diffusion-webui-images-browser': <modules.extensions.Extension object at 0x7f17cd373160>, 'ultimate-upscale-for-automatic1111': <modules.extensions.Extension object at 0x7f17cd3732e0>}
+    
+    loaded_extensions_scripts 
+    {'ldsr': [], 'lora': [], 'scunet': [], 'swinir': [], 'canvas-zoom-and-pan': [], 'extra-options-section': [], 'hypertile': [], 'mobile': [], 'prompt-bracket-checker': [], 'adetailer': [], 'openpose-editor': [], 'sd-dynamic-prompts': [], 'sd-webui-3d-open-pose-editor': [], 'sd-webui-agent-scheduler': [], 'sd-webui-ar': [], 'sd-webui-controlnet': [], 'sd-webui-lora-block-weight': [], 'sd-webui-openpose-editor': [], 'sd-webui-regional-prompter': [], 'sd-webui-segment-anything': [], 'stable-diffusion-webui-images-browser': [], 'ultimate-upscale-for-automatic1111': []}
+    
+    """
     # build script dependency map
     root_script_basedir = os.path.join(paths.script_path, scriptdirname)
     if os.path.exists(root_script_basedir):
@@ -446,7 +453,6 @@ def load_scripts():
     script_callbacks.clear_callbacks()
 
     scripts_list = list_scripts("scripts", ".py") + list_scripts("modules/processing_scripts", ".py", include_extensions=False)
-
     syspath = sys.path
 
     def register_scripts_from_module(module):

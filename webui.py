@@ -38,6 +38,7 @@ def api_only():
     api = create_api(app)
 
     from modules import script_callbacks
+    # 스크립트에서 등록한 콜백들 실행
     script_callbacks.before_ui_callback()
     script_callbacks.app_started_callback(None, app)
 

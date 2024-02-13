@@ -6,8 +6,6 @@ from threading import Thread
 
 from modules.timer import startup_timer
 
-
-
 def imports():
     logging.getLogger("torch.distributed.nn").setLevel(logging.ERROR)  # sshh...
     logging.getLogger("xformers").addFilter(lambda record: 'A matching Triton is not available' not in record.getMessage())
@@ -103,7 +101,7 @@ def initialize_rest(*, reload_script_modules=False):
     startup_timer.record("set samplers")
 
     from modules import extensions
-    # extention list 세팅
+    # extention 객체 및 리스트 세팅
     extensions.list_extensions()
     startup_timer.record("list extensions")
 
@@ -133,9 +131,15 @@ def initialize_rest(*, reload_script_modules=False):
 
     with startup_timer.subcategory("load scripts"):
         # 스크립트 로드
+        """
+        scripts_txt2img = ScriptRunner()
+        scripts_img2img = ScriptRunner()
+        scripts_postproc = scripts_postprocessing.ScriptPostprocessingRunner()
+        """
         scripts.load_scripts()
 
     if reload_script_modules:
+        print("여기들어오니?")
         for module in [module for name, module in sys.modules.items() if name.startswith("modules.ui")]:
             importlib.reload(module)
         startup_timer.record("reload script modules")

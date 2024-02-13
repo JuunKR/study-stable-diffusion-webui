@@ -570,7 +570,7 @@ def list_available_networks():
         except OSError:  # should catch FileNotFoundError and PermissionError etc.
             errors.report(f"Failed to load network {name} from {filename}", exc_info=True)
             continue
-
+        print("name", name)
         available_networks[name] = entry
 
         if entry.alias in available_network_aliases:

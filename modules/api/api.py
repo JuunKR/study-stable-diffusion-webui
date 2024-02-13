@@ -272,6 +272,7 @@ class Api:
         return script, script_idx
 
     def get_scripts_list(self):
+        # t2i i2i ScriptRunner 속의 scripts
         t2ilist = [script.name for script in scripts.scripts_txt2img.scripts if script.name is not None]
         i2ilist = [script.name for script in scripts.scripts_img2img.scripts if script.name is not None]
 

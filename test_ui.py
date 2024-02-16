@@ -66,7 +66,7 @@ UiControlNetUnit(enabled=False, module='none', model='None', weight=1, image=Non
 'NONE:0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\nALL:1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1\nINS:1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0\nIND:1,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0\nINALL:1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0\nMIDD:1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0\nOUTD:1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0\nOUTS:1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1\nOUTALL:1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1\nALL0.5:0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5', True, 
 # 다름
 0, 'values', '0,0.25,0.5,0.75,1', 'Block ID', 'IN05-OUT05', 'none', '', '0.5,1', 'BASE,IN00,IN01,IN02,IN03,IN04,IN05,IN06,IN07,IN08,IN09,IN10,IN11,M00,OUT00,OUT01,OUT02,OUT03,OUT04,OUT05,OUT06,OUT07,OUT08,OUT09,OUT10,OUT11', 1.0, 'black', '20', False, 'ATTNDEEPON:IN05-OUT05:attn:1\n\nATTNDEEPOFF:IN05-OUT05:attn:0\n\nPROJDEEPOFF:IN05-OUT05:proj:0\n\nXYZ:::1', False, False, False, False, 'Matrix', 'Columns', 'Mask', 'Prompt', '1,1', '0.2', False, False, False, 'Attention', [False], '0', '0', '0.4', None, '0', '0', False, False, False, 0, None, [], 0, False, [], [], False, 0, 1, False, False, 0, None, [], -2, False, [], False, 0, None, None, False, False, 'positive', 'comma', 0, False, False, 'start', '', 
-
+# 다름
 7, '1.0,  0.8', [], 0, '', [], 0, '', [], 
 
 True, False, False, False, 0, False, None, None, False, None, None, False, None, None, False, 50, [], 30, '', 4, [], 1, '', '', '', '')

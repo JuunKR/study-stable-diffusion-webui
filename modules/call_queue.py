@@ -20,7 +20,33 @@ def wrap_queued_call(func):
 def wrap_gradio_gpu_call(func, extra_outputs=None):
     @wraps(func)
     def f(*args, **kwargs):
-
+        """
+        
+        'task(qzrovu5ql3cnui3)', 
+        prompt: '(bird:1.0),  iu1 <lora:iu_v35:1>', 
+        negative_prompt: '', 
+        style: [], 
+        steps: 20, 
+        sampler_name: 'DPM++ 2M Karras', 
+        batch_count: 1, 
+        batch_size: 1, 
+        cfg_scale: 7, 
+        height: 512, 
+        width: 512, 
+        enable_hr: False, # 이 파라미터 확인해보자
+        denoising_strength: 0.7, 
+        hr_scale,: 2, 
+        hr_upscaler: 'Latent', 
+        hr_second_pass_steps: 0, 
+        hr_resize_x: 0, 
+        hr_resize_y: 0, 
+        hr_checkpoint_name: 'Use same checkpoint', hr_sampler_name: 'Use same sampler', 
+        hr_promptL '', 
+        hr_negative_prompt: '', 
+        override_settings: [], 
+        custom_inputs : <gradio.routes.Request object at 0x7ff21a4bcbb0>,
+        """
+        print("args", args)
         # if the first argument is a string that says "task(...)", it is treated as a job id
         if args and type(args[0]) == str and args[0].startswith("task(") and args[0].endswith(")"):
             id_task = args[0]

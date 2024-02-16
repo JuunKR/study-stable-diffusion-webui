@@ -788,7 +788,7 @@ def reuse_model_from_already_loaded(sd_model, checkpoint_info, timer):
 
 def reload_model_weights(sd_model=None, info=None):
     checkpoint_info = info or select_checkpoint()
-
+    print("checkpoint_info", checkpoint_info.filename)
     timer = Timer()
 
     if not sd_model:

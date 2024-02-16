@@ -525,7 +525,6 @@ class ScriptRunner:
         self.selectable_scripts.clear()
 
         auto_processing_scripts = scripts_auto_postprocessing.create_auto_preprocessing_script_data()
-
         for script_data in auto_processing_scripts + scripts_data:
             script = script_data.script_class()
             script.filename = script_data.path
@@ -534,16 +533,64 @@ class ScriptRunner:
             script.tabname = "img2img" if is_img2img else "txt2img"
 
             visibility = script.show(script.is_img2img)
-
+            """
+            visibility script <prompt_matrix.py.Script object at 0x7f5b648a8d30>
+            visibility script <prompts_from_file.py.Script object at 0x7f5b648a97e0>
+            visibility script <xyz_grid.py.Script object at 0x7f5b648a98a0>
+            alwayson_scripts <extra_options_section.py.ExtraOptionsSection object at 0x7f5b648a98d0>
+            alwayson_scripts <hypertile_script.py.ScriptHypertile object at 0x7f5b648a9840>
+            alwayson_scripts AfterDetailerScript(version=24.1.1)
+            alwayson_scripts <main.py.Script object at 0x7f5b648a97b0>
+            alwayson_scripts <sd_dynamic_prompts.dynamic_prompting.Script object at 0x7f5b648a8d00>
+            alwayson_scripts <task_scheduler.py.Script object at 0x7f5b648a9750>
+            alwayson_scripts <sd-webui-ar.py.AspectRatioScript object at 0x7f5b648a9450>
+            alwayson_scripts <controlnet.py.Script object at 0x7f5b648a9480>
+            visibility script <movie2movie.py.Script object at 0x7f5b648a9420>
+            alwayson_scripts <lora_block_weight.py.Script object at 0x7f5b648aa350>
+            alwayson_scripts <rp.py.Script object at 0x7f5b648aa380>
+            visibility script <rps.py.Script object at 0x7f5b648aa3b0>
+            alwayson_scripts <sam.py.Script object at 0x7f5b648aa3e0>
+            alwayson_scripts <refiner.py.ScriptRefiner object at 0x7f5b648aa4a0>
+            alwayson_scripts <seed.py.ScriptSeed object at 0x7f5b648aa470>
+            sd-lora-block ui
+            visibility script <img2imgalt.py.Script object at 0x7f5b63bd5180>
+            visibility script <loopback.py.Script object at 0x7f5b63cb7a30>
+            visibility script <outpainting_mk_2.py.Script object at 0x7f5b63bd5f60>
+            visibility script <poor_mans_outpainting.py.Script object at 0x7f5b63bd51b0>
+            visibility script <prompt_matrix.py.Script object at 0x7f5b63bd68c0>
+            visibility script <prompts_from_file.py.Script object at 0x7f5b63bd68f0>
+            visibility script <sd_upscale.py.Script object at 0x7f5b63bd7100>
+            visibility script <xyz_grid.py.Script object at 0x7f5b63bec9a0>
+            alwayson_scripts <extra_options_section.py.ExtraOptionsSection object at 0x7f5b63bec9d0>
+            alwayson_scripts <hypertile_script.py.ScriptHypertile object at 0x7f5b63beca00>
+            alwayson_scripts AfterDetailerScript(version=24.1.1)
+            alwayson_scripts <main.py.Script object at 0x7f5b63beca60>
+            alwayson_scripts <sd_dynamic_prompts.dynamic_prompting.Script object at 0x7f5b63beca90>
+            alwayson_scripts <task_scheduler.py.Script object at 0x7f5b63becb50>
+            alwayson_scripts <sd-webui-ar.py.AspectRatioScript object at 0x7f5b63bee530>
+            alwayson_scripts <controlnet.py.Script object at 0x7f5b63bee4a0>
+            visibility script <movie2movie.py.Script object at 0x7f5b63bee500>
+            alwayson_scripts <lora_block_weight.py.Script object at 0x7f5b63becaf0>
+            alwayson_scripts <rp.py.Script object at 0x7f5b63bee470>
+            visibility script <rps.py.Script object at 0x7f5b63bed480>
+            alwayson_scripts <sam.py.Script object at 0x7f5b63bee680>
+            visibility script <ultimate-upscale.py.Script object at 0x7f5b63bee6b0>
+            alwayson_scripts <refiner.py.ScriptRefiner object at 0x7f5b63bee710>
+            alwayson_scripts <seed.py.ScriptSeed object at 0x7f5b63bee740>
+            
+            
+            """ 
             if visibility == AlwaysVisible:
+                # 스크립트는 다들어가있는거
                 self.scripts.append(script)
+                # alayson은 모르겠음
                 self.alwayson_scripts.append(script)
                 script.alwayson = True
 
             elif visibility:
                 self.scripts.append(script)
+                # xyz
                 self.selectable_scripts.append(script)
-
         self.apply_on_before_component_callbacks()
 
     def apply_on_before_component_callbacks(self):
@@ -641,8 +688,35 @@ class ScriptRunner:
 
     def setup_ui(self):
         all_titles = [wrap_call(script.title, script.filename, "title") or script.filename for script in self.scripts]
+        print("all_titles", all_titles)
+        #  ['Prompt matrix', 'Prompts from file or textbox', 'X/Y/Z plot', 'Extra options', 'Hypertile', 'ADetailer', 'OpenPose Editor', 'Dynamic Prompts v2.17.1', 'Agent Scheduler', 'Aspect Ratio picker', 'ControlNet', 'controlnet m2m', 'LoRA Block Weight', 'Regional Prompter', 'Differential Regional Prompter', 'Segment Anything', 'Refiner', 'Seed']
         self.title_map = {title.lower(): script for title, script in zip(all_titles, self.scripts)}
         self.titles = [wrap_call(script.title, script.filename, "title") or f"{script.filename} [error]" for script in self.selectable_scripts]
+        """
+        self.title_map  {
+            'prompt matrix': <prompt_matrix.py.Script object at 0x7f30bec94d30>, 
+            'prompts from file or textbox': <prompts_from_file.py.Script object at 0x7f30bec957b0>, 
+            'x/y/z plot': <xyz_grid.py.Script object at 0x7f30bec958d0>, 
+            'extra options': <extra_options_section.py.ExtraOptionsSection object at 0x7f30bec95900>, 
+            'hypertile': <hypertile_script.py.ScriptHypertile object at 0x7f30bec95870>, 
+            'adetailer': AfterDetailerScript(version=24.1.1), 
+            'openpose editor': <main.py.Script object at 0x7f30bec95780>, 
+            'dynamic prompts v2.17.1': <sd_dynamic_prompts.dynamic_prompting.Script object at 0x7f30bec957e0>, 
+            'agent scheduler': <task_scheduler.py.Script object at 0x7f30bed8d930>, 
+            'aspect ratio picker': <sd-webui-ar.py.AspectRatioScript object at 0x7f30bed8d900>, 
+            'controlnet': <controlnet.py.Script object at 0x7f30bed8dab0>,
+            'controlnet m2m': <movie2movie.py.Script object at 0x7f30bed8dba0>, 
+            'lora block weight': <lora_block_weight.py.Script object at 0x7f30bec950f0>, 
+            'regional prompter': <rp.py.Script object at 0x7f30bec950c0>, 
+            'differential regional prompter': <rps.py.Script object at 0x7f30bec95090>, 
+            'segment anything': <sam.py.Script object at 0x7f30bec95060>, 
+            'refiner': <refiner.py.ScriptRefiner object at 0x7f30bec94fa0>, 
+            'seed': <seed.py.ScriptSeed object at 0x7f30bec94fd0>}
+        
+        self.titles  ['Prompt matrix', 'Prompts from file or textbox', 'X/Y/Z plot', 'controlnet m2m', 'Differential Regional Prompter']
+        
+
+        """
 
         self.setup_ui_for_section(None)
 
@@ -711,15 +785,57 @@ class ScriptRunner:
         return processed
 
     def before_process(self, p):
+        # [<extra_options_section.py.ExtraOptionsSection object at 0x7ff00a361b40>, <hypertile_script.py.ScriptHypertile object at 0x7ff00a361b70>, AfterDetailerScript(version=24.1.1), <main.py.Script object at 0x7ff00a3619f0>, <sd_dynamic_prompts.dynamic_prompting.Script object at 0x7ff00a361a50>, <task_scheduler.py.Script object at 0x7ff00a3619c0>, <sd-webui-ar.py.AspectRatioScript object at 0x7ff00a3616c0>, <sam.py.Script object at 0x7ff00a461c90>, <lora_block_weight.py.Script object at 0x7ff00a461d50>, <rp.py.Script object at 0x7ff00a461cf0>, <controlnet.py.Script object at 0x7ff00a3617e0>, <refiner.py.ScriptRefiner object at 0x7ff00a461ab0>, <seed.py.ScriptSeed object at 0x7ff00a461ba0>]
+        '''
+        10 10
+        10 10
+        10 14
+        14 14
+        14 32
+        32 32
+        32 32
+        73 97
+        35 53
+        53 73
+        32 35
+        1 4
+        4 10
+        '''
         for script in self.alwayson_scripts:
             try:
                 script_args = p.script_args[script.args_from:script.args_to]
                 script.before_process(p, *script_args)
+                """
+                script.before_process <bound method Script.before_process of <hypertile_script.py.ScriptHypertile object at 0x7f960113fac0>>
+                script.before_process <bound method Script.before_process of AfterDetailerScript(version=24.1.1)>
+                script.before_process <bound method Script.before_process of <main.py.Script object at 0x7f960113fa30>>
+                script.before_process <bound method Script.before_process of <sd_dynamic_prompts.dynamic_prompting.Script object at 0x7f960113f9d0>>
+                script.before_process <bound method Script.before_process of <task_scheduler.py.Script object at 0x7f960113f970>>
+                script.before_process <bound method Script.before_process of <sd-webui-ar.py.AspectRatioScript object at 0x7f9601190700>>
+                script.before_process <bound method Script.before_process of <sam.py.Script object at 0x7f960129c580>>
+                script.before_process <bound method Script.before_process of <lora_block_weight.py.Script object at 0x7f960129c640>>
+                script.before_process <bound method Script.before_process of <rp.py.Script object at 0x7f960129c5e0>>
+                script.before_process <bound method Script.before_process of <controlnet.py.Script object at 0x7f9601190760>>
+                script.before_process <bound method Script.before_process of <refiner.py.ScriptRefiner object at 0x7f960129c3a0>>
+                script.before_process <bound method Script.before_process of <seed.py.ScriptSeed object at 0x7f960129c490>>
+                """
             except Exception:
                 errors.report(f"Error running before_process: {script.filename}", exc_info=True)
 
     def process(self, p):
         for script in self.alwayson_scripts:
+            """
+            <extra_options_section.py.ExtraOptionsSection object at 0x7efbf77719c0>
+            <hypertile_script.py.ScriptHypertile object at 0x7efbf7771930>
+            AfterDetailerScript(version=24.1.1)
+            <main.py.Script object at 0x7efbf77718a0>
+            <sd_dynamic_prompts.dynamic_prompting.Script object at 0x7efbf7770df0>
+            <task_scheduler.py.Script object at 0x7efbf7771840>
+            <sd-webui-ar.py.AspectRatioScript object at 0x7efbf7771540>
+            <sam.py.Script object at 0x7efbf7871ab0>
+            <lora_block_weight.py.Script object at 0x7efbf7871b70>
+            """
+            
             try:
                 script_args = p.script_args[script.args_from:script.args_to]
                 script.process(p, *script_args)
@@ -838,12 +954,48 @@ class ScriptRunner:
                 errors.report(f"Error running before_hr: {script.filename}", exc_info=True)
 
     def setup_scrips(self, p, *, is_ui=True):
+        # print("p.script_args", p.script_args)
+        
         for script in self.alwayson_scripts:
             if not is_ui and script.setup_for_ui_only:
+                #이즈 유야이 펄스 <refiner.py.ScriptRefiner object at 0x7ff67b6ca1d0>
+                #이즈 유야이 펄스 <seed.py.ScriptSeed object at 0x7ff67b6ca020>/
+                print("@@@@@@@@@@@ not_ui")
+                print("script", script)
+                print("!!!", p.script_args[script.args_from:script.args_to])
                 continue
 
             try:
+                """
+                여기가 오니!?!? <extra_options_section.py.ExtraOptionsSection object at 0x7f3c88685b10>
+                argslice 10 10
+                여기가 오니!?!? <hypertile_script.py.ScriptHypertile object at 0x7f3c88685a20>
+                argslice 10 10
+                여기가 오니!?!? AfterDetailerScript(version=24.1.1)
+                argslice 10 14
+                여기가 오니!?!? <main.py.Script object at 0x7f3c88685a50>
+                argslice 14 14
+                여기가 오니!?!? <sd_dynamic_prompts.dynamic_prompting.Script object at 0x7f3c88685960>
+                argslice 14 32
+                여기가 오니!?!? <task_scheduler.py.Script object at 0x7f3c88685900>
+                argslice 32 32
+                여기가 오니!?!? <sd-webui-ar.py.AspectRatioScript object at 0x7f3c88685810>
+                argslice 32 32
+                여기가 오니!?!? <sam.py.Script object at 0x7f3c88719e10>
+                argslice 73 97
+                여기가 오니!?!? <lora_block_weight.py.Script object at 0x7f3c88719ea0>
+                argslice 35 53
+                여기가 오니!?!? <rp.py.Script object at 0x7f3c8871ad40>
+                argslice 53 73
+                여기가 오니!?!? <controlnet.py.Script object at 0x7f3c88685750>
+                argslice 32 35
+                이즈 유야이 펄스 <refiner.py.ScriptRefiner object at 0x7f3c88685f30>
+                이즈 유야이 펄스 <seed.py.ScriptSeed object at 0x7f3c88685690>
+                """
                 script_args = p.script_args[script.args_from:script.args_to]
+                print("@@@@@@@@@@@ is_ui")
+                print("script", script)
+                print("!!!", p.script_args[script.args_from:script.args_to])
                 script.setup(p, *script_args)
             except Exception:
                 errors.report(f"Error running setup: {script.filename}", exc_info=True)

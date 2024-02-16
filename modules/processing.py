@@ -258,9 +258,11 @@ class StableDiffusionProcessing:
 
     @script_args.setter
     def script_args(self, value):
+        print("value", value)
         self.script_args_value = value
 
         if self.scripts_value and self.script_args_value and not self.scripts_setup_complete:
+            print("스크립트알규넷업")
             self.setup_scripts()
 
     def setup_scripts(self):
@@ -706,9 +708,16 @@ def create_infotext(p, all_prompts, all_seeds, all_subseeds, comments=None, iter
 
     return f"{prompt_text}{negative_prompt_text}\n{generation_params_text}".strip()
 
+def print_attributes(obj):
+    for attr_name, attr_value in vars(obj).items():
+        print(f"{attr_name}: {attr_value}")
+
 
 def process_images(p: StableDiffusionProcessing) -> Processed:
+    # print("pscript", dir(p.script))
+    print("PPPP", p.script_args)
     if p.scripts is not None:
+        # alwayson_scripts에 관련된것만 진행
         p.scripts.before_process(p)
 
     stored_opts = {k: opts.data[k] if k in opts.data else opts.get_default(k) for k in p.override_settings.keys() if k in opts.data}
@@ -754,17 +763,17 @@ def process_images_inner(p: StableDiffusionProcessing) -> Processed:
         assert(len(p.prompt) > 0)
     else:
         assert p.prompt is not None
-    #Juun
-
     devices.torch_gc()
 
     seed = get_fixed_seed(p.seed)
     subseed = get_fixed_seed(p.subseed)
 
     if p.restore_faces is None:
+        # opts: Falseess:
         p.restore_faces = opts.face_restoration
 
     if p.tiling is None:
+        # opt: False
         p.tiling = opts.tiling
 
     if p.refiner_checkpoint not in (None, "", "None", "none"):
@@ -828,10 +837,12 @@ def process_images_inner(p: StableDiffusionProcessing) -> Processed:
             sd_models.reload_model_weights()  # model can be changed for example by refiner
 
             p.prompts = p.all_prompts[n * p.batch_size:(n + 1) * p.batch_size]
+            # p.promts ['bird,  iu1<lora:iu_v35:1>']
             p.negative_prompts = p.all_negative_prompts[n * p.batch_size:(n + 1) * p.batch_size]
             p.seeds = p.all_seeds[n * p.batch_size:(n + 1) * p.batch_size]
             p.subseeds = p.all_subseeds[n * p.batch_size:(n + 1) * p.batch_size]
 
+            # rng
             p.rng = rng.ImageRNG((opt_C, p.height // opt_f, p.width // opt_f), p.seeds, subseeds=p.subseeds, subseed_strength=p.subseed_strength, seed_resize_from_h=p.seed_resize_from_h, seed_resize_from_w=p.seed_resize_from_w)
 
             if p.scripts is not None:
@@ -855,6 +866,7 @@ def process_images_inner(p: StableDiffusionProcessing) -> Processed:
             # strength, which is saved as "Model Strength: 1.0" in the infotext
             if n == 0:
                 with open(os.path.join(paths.data_path, "params.txt"), "w", encoding="utf8") as file:
+                    # 메모작성
                     processed = Processed(p, [])
                     file.write(processed.infotext(p, 0))
 
@@ -862,13 +874,15 @@ def process_images_inner(p: StableDiffusionProcessing) -> Processed:
 
             for comment in model_hijack.comments:
                 p.comment(comment)
-
+            # model_hijack.extra_generation_params {}
             p.extra_generation_params.update(model_hijack.extra_generation_params)
+            
+            print("p.extra_generation_params", p.extra_generation_params)
 
             if p.n_iter > 1:
                 shared.state.job = f"Batch {n+1} out of {p.n_iter}"
 
-            
+            print("p.c", p.c)
             ## 여기서 샘플링함
             with devices.without_autocast() if devices.unet_needs_upcast else devices.autocast():
                 samples_ddim = p.sample(conditioning=p.c, unconditional_conditioning=p.uc, seeds=p.seeds, subseeds=p.subseeds, subseed_strength=p.subseed_strength, prompts=p.prompts)
@@ -906,10 +920,13 @@ def process_images_inner(p: StableDiffusionProcessing) -> Processed:
                 x_samples_ddim = batch_params.images
             
             def infotext(index=0, use_main_prompt=False):
+                # 아마 정보 만드는것
                 return create_infotext(p, p.prompts, p.seeds, p.subseeds, use_main_prompt=use_main_prompt, index=index, all_negative_prompts=p.negative_prompts)
 
             save_samples = p.save_samples()
-
+            
+            
+            # 여기서부터 뭐하는거지?
             for i, x_sample in enumerate(x_samples_ddim):
                 p.batch_index = i
 
@@ -927,7 +944,8 @@ def process_images_inner(p: StableDiffusionProcessing) -> Processed:
                     devices.torch_gc()
 
                 image = Image.fromarray(x_sample)
-                
+                image.save("test4.png")
+                  
                 if p.scripts is not None:
                     pp = scripts.PostprocessImageArgs(image)
                     p.scripts.postprocess_image(p, pp)
@@ -991,7 +1009,7 @@ def process_images_inner(p: StableDiffusionProcessing) -> Processed:
         extra_networks.deactivate(p, p.extra_network_data)
 
     devices.torch_gc()
-
+    print_attributes(p)
     res = Processed(
         p,
         images_list=output_images,
@@ -1146,8 +1164,8 @@ class StableDiffusionProcessingTxt2Img(StableDiffusionProcessing):
                 self.extra_generation_params["Hires upscaler"] = self.hr_upscaler
 
     def sample(self, conditioning, unconditional_conditioning, seeds, subseeds, subseed_strength, prompts):
+        print("self.sampler_name", self.sampler_name)
         self.sampler = sd_samplers.create_sampler(self.sampler_name, self.sd_model)
-
         x = self.rng.next()
         
         samples = self.sampler.sample(self, x, conditioning, unconditional_conditioning, image_conditioning=self.txt2img_image_conditioning(x))

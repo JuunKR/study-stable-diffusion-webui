@@ -63,9 +63,11 @@ def webui():
             ui_tempdir.cleanup_tmpdr()
             startup_timer.record("cleanup temp dir")
 
+
         script_callbacks.before_ui_callback()
         startup_timer.record("scripts before_ui_callback")
-
+        
+        # script init
         shared.demo = ui.create_ui()
         startup_timer.record("create ui")
 
@@ -115,11 +117,10 @@ def webui():
 
         # if launch_api:
         create_api(app)
-
+    
         ui_extra_networks.add_pages_to_demo(app)
 
         startup_timer.record("add APIs")
-
         with startup_timer.subcategory("app_started_callback"):
             script_callbacks.app_started_callback(shared.demo, app)
 

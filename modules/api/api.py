@@ -302,13 +302,18 @@ class Api:
         # None everywhere except position 0 to initialize script args
         script_args = [None]*last_arg_index
         script_args[0] = 0
+        print("init_default_script_args", script_args)
 
         # get default values
         with gr.Blocks(): # will throw errors calling ui function without this
             for script in script_runner.scripts:
+                print("script", script)
                 if script.ui(script.is_img2img):
+                    print("여긴 안올듯", script.is_img2img)
                     ui_default_values = []
                     for elem in script.ui(script.is_img2img):
+                        print("찾았다 ㅠㅠ", elem.label)
+                        print("찾았다", elem.value)
                         ui_default_values.append(elem.value)
                     script_args[script.args_from:script.args_to] = ui_default_values
         return script_args
@@ -316,13 +321,20 @@ class Api:
     def init_script_args(self, request, default_script_args, selectable_scripts, selectable_idx, script_runner):
         script_args = default_script_args.copy()
         # position 0 in script_arg is the idx+1 of the selectable script that is going to be run when using scripts.scripts_*2img.run()
+        print("디폴트 카피", script_args)
+        
+        # selectable_scripts
         if selectable_scripts:
             script_args[selectable_scripts.args_from:selectable_scripts.args_to] = request.script_args
             script_args[0] = selectable_idx + 1
 
+        # alwayson_scripts
         # Now check for always on scripts
+        print("여기는 오겠지")
         if request.alwayson_scripts:
+            print("여기도 안오나?")
             for alwayson_script_name in request.alwayson_scripts.keys():
+                print("아마 여기도 한번도 안올예정")
                 alwayson_script = self.get_script(alwayson_script_name, script_runner)
                 if alwayson_script is None:
                     raise HTTPException(status_code=422, detail=f"always on script {alwayson_script_name} not found")
@@ -338,14 +350,28 @@ class Api:
 
     def text2imgapi(self, txt2imgreq: models.StableDiffusionTxt2ImgProcessingAPI):
         script_runner = scripts.scripts_txt2img
+        
         if not script_runner.scripts:
-            print("hello")
+            # 스크립트 인잇
             script_runner.initialize_scripts(False)
             ui.create_ui()
+        print("self.default_script_arg_txt2img", self.default_script_arg_txt2img)
+        # init_default_script_args [0, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None]
         if not self.default_script_arg_txt2img:
+            # 들어옴
+            print("들어와?")
             self.default_script_arg_txt2img = self.init_default_script_args(script_runner)
+        print("self.default_script_arg_txt2img", self.default_script_arg_txt2img)
+            
+        """
+        [0, False, '', 0.8, -1, False, -1, 0.0, 0, 0, False, False, {'ad_model': 'face_yolov8n.pt', 'ad_prompt': '', 'ad_negative_prompt': '', 'ad_confidence': 0.3, 'ad_mask_k_largest': 0, 'ad_mask_min_ratio': 0.0, 'ad_mask_max_ratio': 1.0, 'ad_x_offset': 0, 'ad_y_offset': 0, 'ad_dilate_erode': 4, 'ad_mask_merge_invert': 'None', 'ad_mask_blur': 4, 'ad_denoising_strength': 0.4, 'ad_inpaint_only_masked': True, 'ad_inpaint_only_masked_padding': 32, 'ad_use_inpaint_width_height': False, 'ad_inpaint_width': 512, 'ad_inpaint_height': 512, 'ad_use_steps': False, 'ad_steps': 28, 'ad_use_cfg_scale': False, 'ad_cfg_scale': 7.0, 'ad_use_checkpoint': False, 'ad_checkpoint': 'Use same checkpoint', 'ad_use_vae': False, 'ad_vae': 'Use same VAE', 'ad_use_sampler': False, 'ad_sampler': 'DPM++ 2M Karras', 'ad_use_noise_multiplier': False, 'ad_noise_multiplier': 1.0, 'ad_use_clip_skip': False, 'ad_clip_skip': 1, 'ad_restore_face': False, 'ad_controlnet_model': 'None', 'ad_controlnet_module': 'None', 'ad_controlnet_weight': 1.0, 'ad_controlnet_guidance_start': 0.0, 'ad_controlnet_guidance_end': 1.0}, {'ad_model': 'None', 'ad_prompt': '', 'ad_negative_prompt': '', 'ad_confidence': 0.3, 'ad_mask_k_largest': 0, 'ad_mask_min_ratio': 0.0, 'ad_mask_max_ratio': 1.0, 'ad_x_offset': 0, 'ad_y_offset': 0, 'ad_dilate_erode': 4, 'ad_mask_merge_invert': 'None', 'ad_mask_blur': 4, 'ad_denoising_strength': 0.4, 'ad_inpaint_only_masked': True, 'ad_inpaint_only_masked_padding': 32, 'ad_use_inpaint_width_height': False, 'ad_inpaint_width': 512, 'ad_inpaint_height': 512, 'ad_use_steps': False, 'ad_steps': 28, 'ad_use_cfg_scale': False, 'ad_cfg_scale': 7.0, 'ad_use_checkpoint': False, 'ad_checkpoint': 'Use same checkpoint', 'ad_use_vae': False, 'ad_vae': 'Use same VAE', 'ad_use_sampler': False, 'ad_sampler': 'DPM++ 2M Karras', 'ad_use_noise_multiplier': False, 'ad_noise_multiplier': 1.0, 'ad_use_clip_skip': False, 'ad_clip_skip': 1, 'ad_restore_face': False, 'ad_controlnet_model': 'None', 'ad_controlnet_module': 'None', 'ad_controlnet_weight': 1.0, 'ad_controlnet_guidance_start': 0.0, 'ad_controlnet_guidance_end': 1.0}, True, False, 1, False, False, False, 1.1, 1.5, 100, 0.7, False, False, True, False, False, 0, 'Gustavosta/MagicPrompt-Stable-Diffusion', '', UiControlNetUnit(enabled=False, module='none', model='None', weight=1.0, image=None, resize_mode=<ResizeMode.INNER_FIT: 'Crop and Resize'>, low_vram=False, processor_res=-1, threshold_a=-1, threshold_b=-1, guidance_start=0.0, guidance_end=1.0, pixel_perfect=False, control_mode=<ControlMode.BALANCED: 'Balanced'>, inpaint_crop_input_image=True, hr_option=<HiResFixOption.BOTH: 'Both'>, save_detected_map=True, advanced_weighting=None), UiControlNetUnit(enabled=False, module='none', model='None', weight=1.0, image=None, resize_mode=<ResizeMode.INNER_FIT: 'Crop and Resize'>, low_vram=False, processor_res=-1, threshold_a=-1, threshold_b=-1, guidance_start=0.0, guidance_end=1.0, pixel_perfect=False, control_mode=<ControlMode.BALANCED: 'Balanced'>, inpaint_crop_input_image=True, hr_option=<HiResFixOption.BOTH: 'Both'>, save_detected_map=True, advanced_weighting=None), UiControlNetUnit(enabled=False, module='none', model='None', weight=1.0, image=None, resize_mode=<ResizeMode.INNER_FIT: 'Crop and Resize'>, low_vram=False, processor_res=-1, threshold_a=-1, threshold_b=-1, guidance_start=0.0, guidance_end=1.0, pixel_perfect=False, control_mode=<ControlMode.BALANCED: 'Balanced'>, inpaint_crop_input_image=True, hr_option=<HiResFixOption.BOTH: 'Both'>, save_detected_map=True, advanced_weighting=None), 'NONE:0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\nALL:1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1\nINS:1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0\nIND:1,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0\nINALL:1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0\nMIDD:1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0\nOUTD:1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0\nOUTS:1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1\nOUTALL:1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1\nALL0.5:0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5', True, 'Disable', 'values', '0,0.25,0.5,0.75,1', 'Block ID', 'IN05-OUT05', 'none', '', '0.5,1', 'BASE,IN00,IN01,IN02,IN03,IN04,IN05,IN06,IN07,IN08,IN09,IN10,IN11,M00,OUT00,OUT01,OUT02,OUT03,OUT04,OUT05,OUT06,OUT07,OUT08,OUT09,OUT10,OUT11', 1.0, 'black', '20', False, 'ATTNDEEPON:IN05-OUT05:attn:1\n\nATTNDEEPOFF:IN05-OUT05:attn:0\n\nPROJDEEPOFF:IN05-OUT05:proj:0\n\nXYZ:::1', False, False, False, False, 'Matrix', 'Columns', 'Mask', 'Prompt', '1,1', '0.2', False, False, False, 'Attention', [False], '0', '0', '0.4', None, '0', '0', False, False, False, '0', None, [], '0', False, [], [], False, '0', '2', False, False, '0', None, [], -2, False, [], False, '0', None, None, False, False, 'positive', 'comma', 0, False, False, 'start', '', 'Seed', '', None, 'Nothing', '', None, 'Nothing', '', None, True, False, False, False, 0, False, None, None, False, None, None, False, None, None, False, 50.0, [], 30, '', 4, [], 1, '', '', '', '']
+        """
+        # 위에서는 디폴트 스크립트를 만들었음
+        # 여기서는 get_selectable_script를 만드는중
         selectable_scripts, selectable_script_idx = self.get_selectable_script(txt2imgreq.script_name, script_runner)
-
+        print("논논이나와야함", selectable_scripts, selectable_script_idx ) 
+        # 파라미터 업데이트 
+        # txt2imgreq / StableDiffusionProcessing
         populate = txt2imgreq.copy(update={  # Override __init__ params
             "sampler_name": validate_sampler_name(txt2imgreq.sampler_name or txt2imgreq.sampler_index),
             "do_not_save_samples": not txt2imgreq.save_images,
@@ -359,11 +385,19 @@ class Api:
         args.pop('script_args', None) # will refeed them to the pipeline directly after initializing them
         args.pop('alwayson_scripts', None)
 
+        # script_args = args
+        # script
+        """
+        {'prompt': 'bird,  iu1<lora:iu_v35:1>', 'negative_prompt': '', 'styles': [''], 'seed': -1, 'subseed': -1, 'subseed_strength': 0.0, 'seed_resize_from_h': -1, 'seed_resize_from_w': -1, 'sampler_name': 'Euler', 'batch_size': 1, 'n_iter': 1, 'steps': 50, 'cfg_scale': 7.0, 'width': 512, 'height': 512, 'restore_faces': True, 'tiling': True, 'do_not_save_samples': False, 'do_not_save_grid': False, 'eta': 0.0, 'denoising_strength': 0.0, 's_min_uncond': 0.0, 's_churn': 0.0, 's_tmax': 0.0, 's_tmin': 0.0, 's_noise': 0.0, 'override_settings': {}, 'override_settings_restore_afterwards': True, 'refiner_checkpoint': '', 'refiner_switch_at': 0.0, 'disable_extra_networks': False, 'comments': {}, 'enable_hr': False, 'firstphase_width': 0, 'firstphase_height': 0, 'hr_scale': 2.0, 'hr_upscaler': '', 'hr_second_pass_steps': 0, 'hr_resize_x': 0, 'hr_resize_y': 0, 'hr_checkpoint_name': '', 'hr_sampler_name': '', 'hr_prompt': '', 'hr_negative_prompt': '', 'sampler_index': None}
+        """
+        
         script_args = self.init_script_args(txt2imgreq, self.default_script_arg_txt2img, selectable_scripts, selectable_script_idx, script_runner)
-
+        # print("script_args", script_args)
+        
         send_images = args.pop('send_images', True)
         args.pop('save_images', None)
-
+        
+        
         with self.queue_lock:
             with closing(StableDiffusionProcessingTxt2Img(sd_model=shared.sd_model, **args)) as p:
                 p.is_api = True
@@ -374,7 +408,9 @@ class Api:
                 try:
                     shared.state.begin(job="scripts_txt2img")
                     if selectable_scripts is not None:
+                        print("여기는 안들어옴")
                         p.script_args = script_args
+                        # script run
                         processed = scripts.scripts_txt2img.run(p, *p.script_args) # Need to pass args as list here
                     else:
                         p.script_args = tuple(script_args) # Need to pass args as tuple here

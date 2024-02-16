@@ -236,7 +236,8 @@ class KDiffusionSampler(sd_samplers_common.Sampler):
             'cond_scale': p.cfg_scale,
             's_min_uncond': self.s_min_uncond
         }
-
+        #self.func <function sample_dpmpp_2m at 0x7fc0c1367d00>
+        # repositories/k-diffusion/k_diffusion/sampling.py
         samples = self.launch_sampling(steps, lambda: self.func(self.model_wrap_cfg, x, extra_args=self.sampler_extra_args, disable=False, callback=self.callback_state, **extra_params_kwargs))
 
         if self.model_wrap_cfg.padded_cond_uncond:

@@ -379,7 +379,7 @@ def create_ui():
                 )
 
             txt2img_gallery, generation_info, html_info, html_log = create_output_panel("txt2img", opts.outdir_txt2img_samples, toprow)
-
+        
             txt2img_args = dict(
                 fn=wrap_gradio_gpu_call(modules.txt2img.txt2img, extra_outputs=[None, '', '']),
                 _js="submit",
@@ -418,6 +418,10 @@ def create_ui():
                 ],
                 show_progress=False,
             )
+            # for input_element in custom_inputs:
+            #     # print("Input element type:", input_element.type)  # 입력 요소의 유형 출력
+            #     print("Input element label:", input_element.label)  # 입력 요소의 레이블 출력
+ 
             toprow.prompt.submit(**txt2img_args)
             toprow.submit.click(**txt2img_args)
 

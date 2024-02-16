@@ -136,6 +136,13 @@ def clear_callbacks():
 def app_started_callback(demo: Optional[Blocks], app: FastAPI):
     for c in callback_map['callbacks_app_started']:
         try:
+            print("-------------------------------")
+            print("started_callback",  c.callback.__module__)
+            # lora_script.py
+            # task_scheduler.py
+            # api.py
+            # openpose_editor.py
+            # task_scheduler.py
             c.callback(demo, app)
             timer.startup_timer.record(os.path.basename(c.script))
         except Exception:
@@ -277,6 +284,10 @@ def script_unloaded_callback():
 def before_ui_callback():
     for c in reversed(callback_map['callbacks_before_ui']):
         try:
+            print("-------------------------------")
+            print("before_callback",  c.callback.__module__)
+            # !adetailer.py
+            # scripts.hypertile_xyz
             c.callback()
         except Exception:
             report_exception(c, 'before_ui')

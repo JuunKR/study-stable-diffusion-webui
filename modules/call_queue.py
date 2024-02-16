@@ -46,7 +46,7 @@ def wrap_gradio_gpu_call(func, extra_outputs=None):
         override_settings: [], 
         custom_inputs : <gradio.routes.Request object at 0x7ff21a4bcbb0>,
         """
-        print("args", args)
+        # print("args", args)
         # if the first argument is a string that says "task(...)", it is treated as a job id
         if args and type(args[0]) == str and args[0].startswith("task(") and args[0].endswith(")"):
             id_task = args[0]

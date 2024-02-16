@@ -27,7 +27,7 @@ class ScriptSeed(scripts.ScriptBuiltinUI):
             if cmd_opts.use_textbox_seed:
                 self.seed = gr.Textbox(label='Seed', value="", elem_id=self.elem_id("seed"), min_width=100)
             else:
-                self.seed = gr.Number(label='Seed', value="Seed", elem_id=self.elem_id("seed"), min_width=100, precision=0)
+                self.seed = gr.Number(label='Seed', value=-1, elem_id=self.elem_id("seed"), min_width=100, precision=0)
 
             random_seed = ToolButton(ui.random_symbol, elem_id=self.elem_id("random_seed"), tooltip="Set seed to -1, which will cause a new random number to be used every time")
             reuse_seed = ToolButton(ui.reuse_symbol, elem_id=self.elem_id("reuse_seed"), tooltip="Reuse seed from last generation, mostly useful if it was randomized")
@@ -65,7 +65,7 @@ class ScriptSeed(scripts.ScriptBuiltinUI):
         return self.seed, seed_checkbox, subseed, subseed_strength, seed_resize_from_w, seed_resize_from_h
 
     def setup(self, p, seed, seed_checkbox, subseed, subseed_strength, seed_resize_from_w, seed_resize_from_h):
-        print("몇번들어와???", seed)
+        # print("몇번들어와???", seed)
         p.seed = seed
 
         if seed_checkbox and subseed_strength > 0:

@@ -38,7 +38,7 @@ def txt2img(id_task: str, prompt: str, negative_prompt: str, prompt_styles, step
         hr_negative_prompt=hr_negative_prompt,
         override_settings=override_settings,
     )
-    print("지금 세팅해요")
+    # print("지금 세팅해요")
     p.scripts = modules.scripts.scripts_txt2img
 
     p.script_args = args

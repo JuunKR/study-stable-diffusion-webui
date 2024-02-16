@@ -29,7 +29,7 @@ AxisInfo = namedtuple('AxisInfo', ['axis', 'values'])
 
 def apply_field(field):
     def fun(p, x, xs):
-        print("", x)
+        # print("", x)
         setattr(p, field, x)
 
     return fun
@@ -413,7 +413,6 @@ class Script(scripts.Script):
 
     def ui(self, is_img2img):
         self.current_axis_options = [x for x in axis_options if type(x) == AxisOption or x.is_img2img == is_img2img]
-        print("self.current_axis_options", self.current_axis_options)
         with gr.Row():
             with gr.Column(scale=19):
                 with gr.Row():

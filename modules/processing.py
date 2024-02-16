@@ -258,11 +258,11 @@ class StableDiffusionProcessing:
 
     @script_args.setter
     def script_args(self, value):
-        print("value", value)
+        # print("value", value)
         self.script_args_value = value
 
         if self.scripts_value and self.script_args_value and not self.scripts_setup_complete:
-            print("스크립트알규넷업")
+            # print("스크립트알규넷업")
             self.setup_scripts()
 
     def setup_scripts(self):
@@ -715,7 +715,7 @@ def print_attributes(obj):
 
 def process_images(p: StableDiffusionProcessing) -> Processed:
     # print("pscript", dir(p.script))
-    print("PPPP", p.script_args)
+    # print("PPPP", p.script_args)
     if p.scripts is not None:
         # alwayson_scripts에 관련된것만 진행
         p.scripts.before_process(p)
@@ -877,12 +877,12 @@ def process_images_inner(p: StableDiffusionProcessing) -> Processed:
             # model_hijack.extra_generation_params {}
             p.extra_generation_params.update(model_hijack.extra_generation_params)
             
-            print("p.extra_generation_params", p.extra_generation_params)
+            # print("p.extra_generation_params", p.extra_generation_params)
 
             if p.n_iter > 1:
                 shared.state.job = f"Batch {n+1} out of {p.n_iter}"
 
-            print("p.c", p.c)
+            # print("p.c", p.c)
             ## 여기서 샘플링함
             with devices.without_autocast() if devices.unet_needs_upcast else devices.autocast():
                 samples_ddim = p.sample(conditioning=p.c, unconditional_conditioning=p.uc, seeds=p.seeds, subseeds=p.subseeds, subseed_strength=p.subseed_strength, prompts=p.prompts)
@@ -1164,7 +1164,7 @@ class StableDiffusionProcessingTxt2Img(StableDiffusionProcessing):
                 self.extra_generation_params["Hires upscaler"] = self.hr_upscaler
 
     def sample(self, conditioning, unconditional_conditioning, seeds, subseeds, subseed_strength, prompts):
-        print("self.sampler_name", self.sampler_name)
+        # print("self.sampler_name", self.sampler_name)
         self.sampler = sd_samplers.create_sampler(self.sampler_name, self.sd_model)
         x = self.rng.next()
         

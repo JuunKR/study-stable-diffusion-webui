@@ -688,7 +688,7 @@ class ScriptRunner:
 
     def setup_ui(self):
         all_titles = [wrap_call(script.title, script.filename, "title") or script.filename for script in self.scripts]
-        print("all_titles", all_titles)
+        # print("all_titles", all_titles)
         #  ['Prompt matrix', 'Prompts from file or textbox', 'X/Y/Z plot', 'Extra options', 'Hypertile', 'ADetailer', 'OpenPose Editor', 'Dynamic Prompts v2.17.1', 'Agent Scheduler', 'Aspect Ratio picker', 'ControlNet', 'controlnet m2m', 'LoRA Block Weight', 'Regional Prompter', 'Differential Regional Prompter', 'Segment Anything', 'Refiner', 'Seed']
         self.title_map = {title.lower(): script for title, script in zip(all_titles, self.scripts)}
         self.titles = [wrap_call(script.title, script.filename, "title") or f"{script.filename} [error]" for script in self.selectable_scripts]
@@ -960,9 +960,9 @@ class ScriptRunner:
             if not is_ui and script.setup_for_ui_only:
                 #이즈 유야이 펄스 <refiner.py.ScriptRefiner object at 0x7ff67b6ca1d0>
                 #이즈 유야이 펄스 <seed.py.ScriptSeed object at 0x7ff67b6ca020>/
-                print("@@@@@@@@@@@ not_ui")
-                print("script", script)
-                print("!!!", p.script_args[script.args_from:script.args_to])
+                # print("@@@@@@@@@@@ not_ui")
+                # print("script", script)
+                # print("!!!", p.script_args[script.args_from:script.args_to])
                 continue
 
             try:
@@ -993,9 +993,9 @@ class ScriptRunner:
                 이즈 유야이 펄스 <seed.py.ScriptSeed object at 0x7f3c88685690>
                 """
                 script_args = p.script_args[script.args_from:script.args_to]
-                print("@@@@@@@@@@@ is_ui")
-                print("script", script)
-                print("!!!", p.script_args[script.args_from:script.args_to])
+                # print("@@@@@@@@@@@ is_ui")
+                # print("script", script)
+                # print("!!!", p.script_args[script.args_from:script.args_to])
                 script.setup(p, *script_args)
             except Exception:
                 errors.report(f"Error running setup: {script.filename}", exc_info=True)
